@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Fato ou Fake? - 2024</title>
+  <style>
+    :root {
+      --verde-escuro: #076A75;
+      --off-white: #F9FFFF;
+      --laranja: #F58442;
+      --verde-claro: #3CB3BD;
+      --preto: #000000;
+    }
+    body {
+      background: var(--off-white);
+      color: var(--preto);
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    .quiz-container {
+      border: 2px solid var(--verde-escuro);
+      border-radius: 8px;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 600px;
+      background: white;
+    }
+    img.logo {
+      max-width: 200px;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      color: var(--verde-escuro);
+      text-align: center;
+    }
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin: .4rem 0;
+      padding: .6rem;
+      background: var(--verde-claro);
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      text-align: left;
+    }
+    .options button:hover { background: var(--laranja); }
+    .feedback {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    .controls button {
+      padding: .6rem 1.2rem;
+      background: var(--verde-escuro);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .controls #score {
+      font-size: 1rem;
+      color: var(--preto);
+    }
+  </style>
+</head>
+<body>
+  <!-- logomarca da Rede Lide -->
+  <img src="https://redelidecti.com.br/wp-content/uploads/2024/11/logo1-768x432.png" alt="Rede Lide" class="logo">
+
+  <h1>Quiz Fato ou Fake? - 2024</h1>
+  <!-- LINKS DOS REALIZADORES -->
+ <h5>Realização: <a href="https://redelidecti.com.br/">Rede Lide em CT&I</a> / Apoio: <a href="https://www.targetmultimidia.com.br/">Target Multimídia</a></h5>
+  <div class="quiz-container">
+    <div id="question" class="question"></div>
+    <div class="options" id="options"></div>
+    <div id="feedback" class="feedback"></div>
+    <div class="controls">
+      <button id="nextBtn" onclick="loadQuestion()">Próxima</button>
+      <div id="score">0 acertos até agora, 0 erros</div>
+      <button onclick="clearScore()">Limpar Pontuação</button>
+    </div>
+  </div>
+
+  <script>
+    // Insira aqui todas as perguntas originais que você enviou inicialmente:
+    const questions = [
+
+  {
+    "enunciado": "O aquecimento global é um mito criado por ambientalistas. Essa afirmação é verdadeira ou falsa?",
+    "respostas": [
+      "Mentira, é uma preocupação cientificamente comprovada.",
+      "Verdade, foi criado para confundir a população.",
+      "Mentira, é um mito criado por jornalistas.",
+      "Verdade, não há evidências que comprovem."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma vacina contra a gripe pode causar gripe em quem toma. Essa afirmação é verdadeira ou falsa?",
+    "respostas": [
+      "Falso, a vacina não contém vírus vivos capazes de causar a doença.",
+      "Falso, ela pode causar outras doenças mas não gripe.",
+      "Verdade, essa informação circulou no whatsapp da família.",
+      "Verdade, minha vizinha disse que a prima dela teve."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O desmatamento na Amazônia é um grande problema, mas é irreversível e a floresta não pode ser recuperada.",
+    "respostas": [
+      "Falso, há técnicas e esforços possíveis para reflorestar.",
+      "Falso, a floresta pode ser recuperada e queimada ao mesmo tempo.",
+      "Verdade, por isso não adianta mais fazer nada.",
+      "Verdade, não há o que fazer com o desmatamento."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "A Terra é plana e há evidências científicas que comprovam isso. Essa afirmação é verdadeira ou falsa?",
+    "respostas": [
+      "Falso, há observações astronômicas e cálculos científicos que comprovam que é redonda.",
+      "Falso, a terra tem outro formato que ainda está sendo descoberto.",
+      "Verdade, existem os chamados terraplanistas que dizem isso toda hora na internet.",
+      "Verdade, não existe evidência científica, mas circula no grupo de whatsapp essa informação."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Beber água ajuda a regular a temperatura do corpo e auxilia em várias funções específicas. Essa afirmação é verdadeira ou falsa?",
+    "respostas": [
+      "Verdade, a água é essencial para manter o corpo hidratado e regular a temperatura.",
+      "Verdade, desde que seja água mais gelada e assim conseguir regular a temperatura.",
+      "Falso, a água tem funções específicas que não são de regular a temperatura do corpo.",
+      "Falso, temos água em abundância no planeta e ela não precisa ser preservada."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Os incêndios no Pantanal são naturais e fazem parte da dinâmica do bioma.",
+    "respostas": [
+      "Falso, os incêndios recentes foram provocados por atividades humanas.",
+      "Falso, não tivemos incêndios no Pantanal nos últimos anos.",
+      "Verdade, eles têm relação com a dinâmica do bioma.",
+      "Verdade, e por isso não precisa de ninguém para apagar."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O uso de máscaras impede a propagação do vírus durante uma pandemia. Essa afirmação é verdadeira ou falsa?",
+    "respostas": [
+      "Verdade, as máscaras bloqueiam partículas infectadas ",
+      "Falso, elas não reduzem a transmissão do vírus",
+      "Falso, elas não atuam como barreira física.",
+      "Verdade, mas não serve para Covid-19."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O que é um buraco negro?",
+    "respostas": [
+      "Uma estrela que colapsou em si mesma",
+      "Um grande aspirador no espaço",
+      "Um planeta muito escuro",
+      "Um buraco no centro da Terra"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Qual é o principal componente do Sol?",
+    "respostas": [
+      "Hidrogênio",
+      "Ferro",
+      "Oxigênio",
+      "Hélio"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O que é DNA?",
+    "respostas": [
+      "Código genético que define todas as características de um ser vivo",
+      "Um tipo de proteína",
+      "Um vírus",
+      "Um tipo de bactéria"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Por que os dinossauros foram extintos?",
+    "respostas": [
+      "Colisão de um asteroide com a Terra",
+      "Doenças generalizadas",
+      "Erupções vulcânicas",
+      " Falta de comida"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O que significa “evolução” em biologia?",
+    "respostas": [
+      "A adaptação das espécies ao longo do tempo",
+      "Uma mudança repentina nas espécies",
+      "O desenvolvimento de habilidades especiais em animais",
+      "A criação de novas espécies a cada geração"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Qual é o órgão responsável por bombear o sangue pelo corpo?",
+    "respostas": [
+      "Coração",
+      "Fígado",
+      "Pulmão",
+      "Estômago"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O que é uma vacina?",
+    "respostas": [
+      "Uma substância que ajuda a prevenir doenças.",
+      "Um tratamento que cura doenças",
+      "Um remédio natural",
+      "Uma planta medicinal"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Qual é o maior órgão do corpo humano?",
+    "respostas": [
+      "Pele",
+      "Coração",
+      "Fígado",
+      "Pulmão"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Qual é a principal causa de cáries dentárias?",
+    "respostas": [
+      " Consumo excessivo de açúcar ",
+      "Comer frutas",
+      "Falta de vitaminas",
+      "Ingerir muito leite"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O que é o sistema imunológico?",
+    "respostas": [
+      "O conjunto de células que protege o corpo contra doenças ",
+      "O sistema que digere alimentos",
+      "O sistema que controla o movimento",
+      "O sistema que produz hormônios"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Por que lavar as mãos com sabão é importante?",
+    "respostas": [
+      "Porque o sabão mata germes e bactérias ",
+      "Porque remover a sujeira",
+      "Porque mantém as mãos hidratadas",
+      "Porque é refrescante"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O que é um robô?",
+    "respostas": [
+      "Uma máquina que pode realizar tarefas automaticamente ",
+      "Um brinquedo que anda",
+      "Um computador portátil",
+      "Um tipo de celular inteligente"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Qual é o maior benefício da inteligência artificial?",
+    "respostas": [
+      "Ajudar a automatizar processos e tomar decisões rápidas",
+      "Fazer compras online",
+      "Substituir os humanos em todas as tarefas",
+      "Gerar entretenimento"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O que significa Wi-Fi?",
+    "respostas": [
+      "Uma tecnologia para comunicação sem fio",
+      "Um tipo de internet rápida",
+      "Um sistema de satélites",
+      "Um tipo de cabo de internet"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Qual é a principal função dos drones?",
+    "respostas": [
+      "Capturar imagens e realizar entregas",
+      "Transportar passageiros",
+      " Conectar-se às redes sociais",
+      "Fazer chamadas de vídeo"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Qual é o perigo de compartilhar informações pessoais na internet?",
+    "respostas": [
+      "As pessoas podem usá-las para te enganar",
+      "Aumenta a sua popularidade",
+      "Reduze o espaço de armazenamento no celular",
+      "Faz você perder seguidores"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O que é o aquecimento global?",
+    "respostas": [
+      "O aumento gradual das temperaturas médias da Terra",
+      "Um fenômeno que reduz as temperaturas do planeta",
+      "A queda da camada de ozônio",
+      "A polícia dos oceanos"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Por que a Amazônia é importante para o mundo?",
+    "respostas": [
+      "Porque é a maior floresta do mundo e ajuda a regular o clima",
+      "Porque produz a maior parte da comida do planeta",
+      "Porque serve como fonte de mineração",
+      " Porque é o habitat de animais em extinção"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O que é energia renovável?",
+    "respostas": [
+      "Energia que não se esgota e vem de fontes naturais como sol e vento ",
+      "Energia gerada a partir de carvão",
+      "Energia nuclear",
+      "Energia gerada a partir de petróleo"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Por que o plástico é prejudicial ao meio ambiente?",
+    "respostas": [
+      "Porque demora muito tempo para se decompor",
+      "Porque é feito de petróleo",
+      "Porque é reciclável",
+      "Porque é caro produzir"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O que é desmatamento?",
+    "respostas": [
+      "O corte de árvores em florestas",
+      "O plantio de novas árvores",
+      "Limpeza de áreas para cidades construir",
+      "O reflorestamento de áreas degradadas"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O que é fake news?",
+    "respostas": [
+      "Uma notícia falsa feita para enganar as pessoas",
+      "Uma notícia verdadeira",
+      "Um erro de digitação em uma notícia",
+      "Uma opinião de alguém"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Por que é perigoso acreditar em fake news sobre vacinas?",
+    "respostas": [
+      "Porque pode levar as pessoas a não se vacinarem e ficarem doentes",
+      "Porque as vacinas são caras",
+      "Porque as vacinas não são seguras",
+      "Porque as vacinas são ineficazes"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Como você pode identificar uma notícia falsa?",
+    "respostas": [
+      "Verificando se a notícia vem de uma fonte confiável",
+      "Confiar em qualquer informação na internet",
+      "Lendo apenas o título da notícia",
+      "Compartilhando a notícia com amigos para saber se é verdade"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Existem agências especializadas em verificar a veracidade de notícias e combater a disseminação de notícias falsas?",
+    "respostas": [
+      "Sim, diversas agências de verificação de fatos, como a Agência Lupa e o Aos Fatos, trabalham para verificar e corrigir informações falsas que circulam na internet.",
+      "Não, todas as notícias falsas são verificadas automaticamente por algoritmos de redes sociais, sem a necessidade de agências especializadas.",
+      "Sim, mas as agências de checagem de fatos apenas monitoram os jornais tradicionais e não trabalham com notícias digitais ou de redes sociais.",
+      "Não, as agências de checagem de fatos criam notícias falsas para testar a resposta do público, mas não combatem fake news."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Por que devemos verificar a veracidade de uma notícia antes de compartilhá-la?",
+    "respostas": [
+      "Para evitar a disseminação de informações falsas",
+      "Para mostrar que somos espertos",
+      "Porque todas as notícias são verdadeiras",
+      "Porque isso nos dá mais curtidas"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Qual é o objetivo de uma notícia falsa?",
+    "respostas": [
+      "Confundir e enganar as pessoas",
+      "Informar ou corretamente o público",
+      "Aumentar a venda de jornais",
+      "Promover debates saudáveis"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O que é um satélite?",
+    "respostas": [
+      "Um corpo celeste que orbita um planeta",
+      "Um planeta pequeno",
+      "Uma estrela cadente",
+      "Uma rocha espacial"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O que é reciclagem?",
+    "respostas": [
+      "Transformar materiais usados ​​em novos produtos",
+      "Jogar o lixo no lugar certo",
+      "Queimar lixo para reduzir o volume",
+      "Usar menos água nas atividades diárias"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Qual é o principal gás responsável pelo efeito estufa?",
+    "respostas": [
+      "Dióxido de carbono",
+      "Oxigênio",
+      "Metano",
+      "Hélio"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O que são biocombustíveis?",
+    "respostas": [
+      "Combustíveis feitos de materiais biológicos, como plantas",
+      "Combustíveis feitos de petróleo",
+      "Combustíveis fósseis",
+      "Eletricidade gerada por água"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Por que a conservação da água é importante?",  
+    "respostas": [
+      "Porque a água limpa é um recurso limitado",
+      "Porque a água é abundante",
+      "Porque usar água em excesso polui os rios",
+      "Porque a água não pode ser reciclada"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Em 2021, uma fake news afirmava que o rover Perseverance da NASA não pousou em Marte. O que realmente aconteceu?",
+    "respostas": [
+      "O Perseverance pousou com sucesso em Marte",
+      "A missão foi cancelada",
+      "O robô foi cortado antes de terraplenagem",
+      "O rover pousou na Lua por engano"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma notícia falsa sobre o 5G dizia que ele causava doenças. O que os estudos mostram?",
+    "respostas": [
+      "Não há evidências científicas de que o 5G causa doenças",
+      "O 5G causa doenças respiratórias",
+      "O 5G interfere no sistema imunológico",
+      "O 5G é perigoso apenas para animais"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Em 2020, surgiram relatos de que cientistas chineses realizaram o coronavírus em um laboratório. O que foi concluído pelas investigações oficiais?",
+    "respostas": [
+      "Não há provas conclusivas sobre essa teoria",
+      "O vírus foi criado em um laboratório intencionalmente",
+      "O vírus surgiu de uma planta geneticamente modificada",
+      "O vírus foi transportado por uma sonda espacial"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma fake news dizia que a NASA havia descoberto vida extraterrestre em Marte. Qual foi a verdadeira descoberta?",
+    "respostas": [
+      "A NASA encontrou água congelada e ameaças de condições passadas para a vida",
+      "A NASA encontrou sinais claros de vida em Marte",
+      "A NASA encontrou plantas em Marte",
+      "A NASA descobriu um novo planeta no Sistema Solar"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Notícias falsas afirmavam que a Terra pararia de girar por 24 horas. O que realmente acontece?",
+    "respostas": [
+      "A Terra nunca parou e não parará de girar",
+      "A Terra para girar periodicamente",
+      "A Terra pode parar de girar a qualquer momento",
+      "A Terra para girar durante eclipses solares"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Fake news afirmam que o uso prolongado de máscaras faciais causa envenenamento por CO2. O que os estudos demonstraram?",
+    "respostas": [
+      "Máscaras não causam envenenamento por CO2",
+      "Máscaras podem causar envenenamento por CO2",
+      "O envenenamento acontece apenas após 8 horas de uso",
+      "Apenas crianças são afetadas por isso"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Circulou uma fake news dizendo que vacinas contra COVID-19 alteraram o DNA das pessoas. O que a ciência diz sobre isso?",
+    "respostas": [
+      "As vacinas não alteram o DNA humano",
+      "As vacinas realmente alteraram o DNA",
+      "As vacinas podem modificar o DNA temporariamente",
+      "Apenas vacinas de mRNA alteram o DNA"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Notícias falsas podem afetar a saúde pública?",
+    "respostas": [
+      "Sim, notícias falsas podem levar as pessoas a acreditarem em tratamentos não comprovados, colocando a saúde pública em risco.",
+      "Não, as notícias falsas não afetam a saúde pública, pois a maioria das pessoas sabe distinguir informações verdadeiras de falsas.",
+      "Sim, mas só afetam a saúde quando são divulgadas por médicos, não por sites ou redes sociais.",
+      "Não, as notícias falsas são úteis para aumentar a conscientização sobre a saúde, mesmo que contenham informações erradas."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma notícia falsa afirmou que beber água com limão curaria a COVID-19. Qual é a verdade?",
+    "respostas": [
+      "Água com limão fortalece o sistema imunológico, mas não cura a COVID-19",
+      "Beber água com limão previne infecções virais",
+      "Água com limão mata o vírus imediatamente",
+      "O limão deve ser misturado com outros ingredientes para funcionar"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Notícias falsas circularam dizendo que chips de controle seriam inseridos em vacinas. O que foi esclarecido?",
+    "respostas": [
+      "Não existem chips de controle inseridos em vacinas",
+      "Chips são usados ​​para rastreamento, mas sem perigo",
+      "Chips são usados ​​apenas em vacinas para grupos especiais",
+      "Os chips podem ser retirados após a vacinação"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Em 2020, surgiram relatos de que o alho poderia curar a COVID-19. O que a OMS disse sobre isso?",
+    "respostas": [
+      "Não há evidências de que o alho cure ou previna a COVID-19 ",
+      "Como comer alho mata o vírus no corpo",
+      "O alho pode prevenir a infecção se consumido regularmente",
+      "O alho é eficaz apenas em casos leves de COVID-19"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma fake news afirmava que a tecnologia 5G poderia transmitir o coronavírus. O que foi descoberto?",
+    "respostas": [
+      "Não há nenhuma conexão entre 5G e transmissão de coronavírus",
+      "O 5G tem uma leve influência na transmissão de vírus",
+      "O 5G facilita a propagação do vírus em cidades grandes",
+      "O 5G aumenta a resistência do vírus no ar"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Houve uma notícia falsa de que os smartphones podem causar câncer cerebral. O que dizem os estudos?",
+    "respostas": [
+      "Não há evidências sólidas de que smartphones causem câncer",
+      "Smartphones causam câncer se usados ​​por mais de 5 horas por dia",
+      "Somente telefones antigos causam câncer",
+      "Apenas crianças correm risco de câncer por causa de smartphones"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Fake news afirmaram que o Google e outras empresas monitoraram conversas pessoais sem permissão. O que as empresas dizem sobre isso?",
+    "respostas": [
+      "O Google e outras empresas apenas coletam dados com o consentimento do usuário",
+      "O Google grava todas as conversas de seus usuários",
+      "O Google coleta apenas mensagens de texto",
+      "As empresas ouvem apenas chamadas telefônicas"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma fake news dizia que a inteligência artificial substituirá todos os empregos humanos até 2030. O que os especialistas preveem?",
+    "respostas": [
+      "A IA substituirá algumas funções, mas não todos os empregos",
+      "A IA substituirá todos os empregos até 2030",
+      "A IA substituirá apenas empregos criativos",
+      "A IA substituirá empregos apenas em países desenvolvidos"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma fake news dizia que a Floresta Amazônica não é o “pulmão do mundo”. O que dizem os cientistas?",
+    "respostas": [
+      "A Amazônia é fundamental para a produção de oxigênio e a regulação do clima",
+      "A Amazônia não tem importância para o clima global",
+      "A Amazônia é importante apenas para a biodiversidade",
+      "A Amazônia já não tem função ecológica significativa"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Circulou uma notícia falsa de que o derretimento das calotas polares não afeta o nível do mar. O que é verdade?",
+    "respostas": [
+      "O derretimento das calotas polares eleva o nível do mar, contribuindo para inundações",
+      "O derretimento das calotas polares não altera o nível do mar",
+      "O derretimento ocorre apenas em áreas isoladas e não afeta o mar",
+      "O nível do mar diminui quando as calotas derretem"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma notícia afirma que os incêndios florestais na Amazônia eram causados por questões naturais. O que realmente é a causa?",
+    "respostas": [
+      "Os incêndios são causados principalmente por atividades humanas, como desmatamento e queimadas",
+      "Fenômenos naturais como raios são a principal causa",
+      "Erupções vulcânicas são a maior causa de incêndio",
+      "A poluição do ar aumenta a incidência de incêndios"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma fake news dizia que as energias renováveis são mais caras que os combustíveis fósseis. O que os estudos mostram?",
+    "respostas": [
+      "As energias renováveis são, em muitos casos, mais baratas e sustentáveis que os combustíveis fósseis ",
+      "As energias renováveis são muito mais caras que os combustíveis fósseis",
+      "As energias renováveis só são mais baratas em países ricos",
+      "O custo das energias renováveis é o mesmo em todo o mundo"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Circulou na internet uma fake news divulgando antibióticos curam o coronavírus. Qual é a verdade?",
+    "respostas": [
+      "Antibióticos não funcionam contra vírus, incluindo o coronavírus",
+      "Antibióticos são eficazes contra o coronavírus",
+      "Antibióticos previnem a COVID-19",
+      "Antibióticos são recomendados apenas para casos graves de COVID-19"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Durante a pandemia, surgiram notícias falsas que diziam que o álcool em gel substituía a lavagem das mãos. O que os especialistas dizem?",  
+    "respostas": [
+      "A lavagem das mãos com água e sabão é igualmente eficaz e deve ser priorizada sempre que possível ",
+      "O álcool em gel é mais eficaz que a lavagem com água e sabão",
+      "O álcool em gel mata todos os tipos de vírus, inclusive dentro do corpo",
+      "O álcool em gel pode ser usado apenas para desinfetar objetos"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma notícia falsa disse que as vacinas contra COVID-19 provocam infertilidade em mulheres. Qual é a verdade?",  
+    "respostas": [
+      "Não há evidências científicas de que liguem vacinas contra infertilidade",
+      "As vacinas podem causar infertilidade temporária",
+      "Apenas uma das vacinas disponíveis pode causar infertilidade",
+      "A infertilidade ocorre apenas em mulheres acima de 50 anos"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma notícia falsa afirma que Elon Musk enviará humanos para Marte em 2022. Qual é a realidade?",  
+    "respostas": [
+      "Não houve missão tripulada para Marte até o momento",
+      "Um robô foi enviado para Marte com humanos a bordo",
+      "Houve uma missão tripulada para Marte em 2022",
+      "A missão foi cancelada por causa da pandemia"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Circulou a informação falsa de que a internet 5G roubaria dados pessoais automaticamente. O que realmente acontece?",  
+    "respostas": [
+      "O 5G é apenas uma nova tecnologia de comunicação mais rápida e segura ",
+      "O 5G rouba informações pessoais sem consentimento",
+      "O 5G exige que todos os dispositivos sejam atualizados para proteger dados",
+      "O 5G só funciona em países desenvolvidos"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Em 2021, uma notícia falsa dizia que o desmatamento da Amazônia havia parado completamente. O que os dados oficiais mostram?",  
+    "respostas": [
+      "O desmatamento da Amazônia continua, embora em alguns meses tenha diminuído",
+      "O desmatamento parou completamente em 2021",
+      "A Amazônia está sendo reflorestada",
+      "O desmatamento é irrelevante para o meio ambiente"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma fake news afirmava que o aquecimento global não é real porque o inverno foi rigoroso em 2020. Qual é a explicação correta?",  
+    "respostas": [
+      "O aquecimento global é uma tendência de longo prazo e não depende de um inverno rigoroso",
+      "O aquecimento global não afeta os invernos",
+      "O aquecimento global só afeta o verão",
+      "Invernos rigorosos provam que o aquecimento global é falso"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Notícias falsas dizem que a reciclagem não faz diferença no meio ambiente. Qual é a verdade?",  
+    "respostas": [
+      "Reciclar ajuda para reduzir a poluição e a conservação dos recursos naturais",
+      "Reciclar não tem impacto no meio ambiente",
+      "A reciclagem só funciona para materiais plásticos",
+      "Reciclar o custo mais do que os benefícios"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma fake news afirmava que a energia solar pode causar câncer. O que dizem os estudos?",  
+    "respostas": [
+      "A energia solar é uma fonte limpa e não causa câncer",
+      "A energia solar pode causar câncer de pele",
+      "Apenas trabalhadores de plantas solares correm risco de câncer",
+      "O painel solar emite radiação prejudicial à saúde"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Circulou uma notícia falsa dizendo que a camada de ozônio está completamente recuperada. Qual é a situação atual?",  
+    "respostas": [
+      "A camada de ozônio está se recuperando, mas ainda não está completamente restaurada",
+      "A camada de ozônio já se recuperou totalmente",
+      "A camada de ozônio foi destruída permanentemente",
+      "A camada de ozônio não tem impacto no clima da Terra"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma fake news circulou dizendo que não existe mudança climática. O que os cientistas dizem?",  
+    "respostas": [
+      "A mudança climática é real e comprovada por evidências científicas ",
+      "A mudança climática é uma farsa",
+      "Uma mudança climática não afeta os oceanos",
+      "A mudança climática só afeta alguns países"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Circulou uma notícia falsa dizendo que o ozônio pode ser usado como tratamento eficaz contra COVID-19. Qual é a verdade?",  
+    "respostas": [
+      "Não há evidências científicas que comprovem o uso de ozônio como tratamento eficaz contra COVID-19",
+      "O ozônio é um tratamento eficaz contra COVID-19",
+      "O ozônio pode ser usado apenas em casos graves de COVID-19",
+      "O ozônio pode ser perigoso quando inalado"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Uma notícia falsa disse que beber muita água pode \"\"lavar\"\" o vírus da COVID-19 do corpo. O que os especialistas dizem?",  
+    "respostas": [
+      "Beber água mantém o corpo hidratado, mas não \"\"lava\"\" ou cura a COVID-19 ",
+      "Beber água cura a COVID-19",
+      "Beber muita água elimina o vírus do corpo",
+      "Beber água quente mata o coronavírus"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Terremotos só ocorrem em regiões próximas a vulcões. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falsa, ormalmente, o risco de terremotos é alto em lugares mais elevados ou perto dos limites das placas. ",
+      "Verdadeira, terremotos e vulcões são fenômenos relacionados.",
+      "Verdadeira, mas apenas em regiões com placas tectônicas ativas.",
+      "Falsa, apenas vulcões causam tremores de terra."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Modificar o DNA de um organismo pode levar à criação de novas espécies. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Verdadeira, e já está sendo explorada em diversas áreas da ciência.",
+      "Verdadeira, mas apenas em plantas.",
+      "Falsa, a genética não pode alterar a evolução natural.",
+      "Verdadeira, mas o processo é muito lento e complexo."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "A internet das coisas (IoT) permite que objetos do dia a dia se conectem à internet e troquem informações. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Verdadeira, e está transformando a forma como interagimos com o mundo ao nosso redor.",
+      "Falsa, a IoT é apenas uma teoria.",
+      "Verdadeira, mas apenas para eletrodomésticos.",
+      "Falsa, a IoT só é utilizada em ambientes industriais."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Tomar antibiótico cura o resfriado comum. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falsa, o resfriado é causado por um vírus e os antibióticos não atuam contra vírus.",
+      "Verdadeira, os antibióticos combatem todas as infecções.",
+      "Verdadeira, mas apenas em casos graves.",
+      "Falsa, os antibióticos podem causar resistência bacteriana"
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "A camada de ozônio está completamente recuperada. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Verdadeira, mas a recuperação é um processo lento e gradual.",
+      "Verdadeira, graças aos esforços internacionais para banir substâncias que a danificam.",
+      "Falsa, a camada de ozônio ainda está sendo destruída.",
+      "Falsa, a camada de ozônio nunca esteve em risco."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Beber água com limão em jejum emagrece rapidamente. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falsa, a perda de peso está ligada a uma dieta equilibrada e exercício físico.",
+      "Verdadeira, o limão acelera o metabolismo.",
+      "Verdadeira, mas apenas se o limão for orgânico.",
+      "Falsa, não há evidências científicas que comprovem essa afirmação."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "As vacinas causam autismo. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falsa, essa afirmação foi desmentida por inúmeros estudos científicos.",
+      "Verdadeira, diversos estudos comprovaram essa relação.",
+      "Verdadeira, mas apenas algumas vacinas.",
+      "Falsa, mas ainda há controvérsias sobre o assunto."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O consumo excessivo de açúcar pode aumentar o risco de diabetes tipo 2. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Verdadeira, o consumo excessivo de açúcar pode causar resistência à insulina.",
+      "Falsa, o açúcar é inofensivo e não influencia diretamente no desenvolvimento da diabetes tipo 2.",
+      "Falsa, a ingestão de açúcar pode causar diabetes tipo 1, mas não tem efeito sobre o diabetes tipo 2.",
+      "Verdadeira, porém a diabetes tipo 2 é causada apenas por fatores."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Plantar árvores ajuda a combater o aquecimento global. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Verdadeira, as árvores absorvem CO₂ da atmosfera, o que contribui diretamente para a mitigação do aquecimento global.",
+      "Falsa, plantar árvores não tem impacto no aquecimento global, pois as árvores liberam mais gases do efeito estufa do que absorvem.",
+      "Verdadeira, embora as árvores sejam importantes, o aquecimento global é causado principalmente pela queima de combustíveis fósseis.",
+      "Falsa, o plantio de árvores é uma solução temporária e não ajuda a combater o aquecimento global de forma significativa."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "As notícias falsas sempre são espalhadas por robôs nas redes sociais. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falso. Os robôs são usados, mas muitas notícas também são compartilhadas por pessoas reais.",
+      "Verdadeiro. As notícias falsas são sempre espalhadas por robôs nas redes sociais, pois eles têm o poder de aumentar rapidamente o alcance dessas informações.",
+      "Falso. Notícias falsas só podem ser espalhadas por robôs, porque as pessoas raramente compartilham informações incorretas.",
+      "Falso. As notícias falsas não são espalhadas por robôs, mas por grupos organizados que têm interesse em manipular a opinião pública."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Tomar vitamina C cura gripes e resfriados. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falso, a vitamina C ajuda a fortalecer o sistema imunológico, mas não garante a cura de gripes e resfriados.",
+      "Verdadeira, a vitamina C pode inclusive ser consumida em pastilhas e balas.",
+      "Verdadeira, uma simples vitamina é capaz de curar doenças.",
+      "Falso, o excesso de vitaminas também pode ser perigoso para a saúde."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "A prática regular de exercícios físicos melhora a saúde mental e pode ajudar a combater a depressão. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Verdadeira, o exercício físico libera endorfinas, que melhoram o humor e podem ajudar a reduzir sintomas de depressão e ansiedade.",
+      "Falsa, exercícios físicos só ajudam a melhorar a saúde física, mas não têm impacto na saúde mental ou na depressão.",
+      "Falsa, exercícios físicos podem piorar a saúde mental em algumas pessoas, especialmente se forem praticados em excesso.",
+      "Verdadeira, mas a melhor forma de combater a depressão é com medicamentos e terapias."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "A luz do celular pode causar queimaduras. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falso, embora a luz azul dos dispositivos possa causar fadiga ocular, não há evidências de que ela cause cegueira.",
+      "Verdadeira, a luz do celular pode causar queimaduras se a exposição for muito longa e intensa.",
+      "Falsa, a luz do celular pode causar queimaduras apenas em pessoas com pele sensível ou com alguma condição médica.",
+      "Verdadeira, a luz do celular causa queimaduras e pode provocar danos temporários à visão."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Impressoras 3D já são usadas para criar órgãos artificiais em laboratórios. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Verdadeira, cientistas estão usando impressoras 3D para criar tecidos e estruturas de órgãos, como vasos sanguíneos.",
+      "Falso, impressoras 3D são usadas apenas para criar objetos simples, como brinquedos e ferramentas, e não para criar órgãos.",
+      "Verdadeira, as impressoras 3D são usadas apenas para criar partes do corpo.",
+      "Falso, impressoras 3D podem criar órgãos artificiais, mas só em alguns países, e não em laboratórios de pesquisa."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Todas as notícias que circulam no WhatsApp e em outros aplicativos de mensagens são verificadas antes de serem enviadas. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falso. Os aplicativos de mensagens, como o WhatsApp, não verificam automaticamente as notícias antes de serem enviadas, o que facilita a disseminação de informações falsas.",
+      "Falso. Apenas as notícias que são enviadas por grupos grandes são verificadas, mas não as que circulam em chats privados.",
+      "Verdadeiro. Todos os aplicativos de mensagens verificam as informações antes de serem enviadas, garantindo que as notícias sejam sempre confiáveis.",
+      "Falso. Alguns aplicativos de mensagens verificam automaticamente a veracidade das notícias, mas apenas os que têm sistemas avançados de inteligência artificial."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Se uma notícia tem muitos compartilhamentos e comentários, é porque ela é verdadeira. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falsa. O número de compartilhamentos ou comentários não garante a veracidade de uma notícia.",
+      "Verdadeiro. Se uma notícia tem muitos compartilhamentos e comentários, isso significa que ela foi verificada e é verdadeira.",
+      "Falsa. Quanto mais compartilhamentos uma notícia tiver, mais provável é que seja verdadeira, porque as pessoas só compartilham coisas corretas.",
+      "Falsa. As notícias mais populares são sempre verdadeiras, porque são amplamente discutidas e comentadas."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Existe um plano da NASA para enviar humanos para Marte até 2025. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falso! Embora a NASA tenha planos para missões tripuladas a Marte, isso deve acontecer por volta da década de 2030, e não antes de 2025.",
+      "Verdadeiro. A NASA já está preparando uma missão para enviar humanos a Marte até 2025, e os preparativos estão bem avançados.",
+      "Falso. A NASA cancelou todos os planos de enviar humanos a Marte, então essa missão não acontecerá.",
+      "Falso. A NASA está planejando enviar humanos para Marte, mas apenas em 2040, e não antes disso."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O plástico descartado nos oceanos já afeta diretamente a cadeia alimentar de muitas espécies marinhas. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Verdadeira, muitos animais marinhos ingerem pedaços de plástico, confundindo-os com alimentos, o que afeta a cadeia alimentar e pode levar à morte de diversas espécies.",
+      "Falsa, o plástico nos oceanos não afeta a cadeia alimentar, pois ele se decompõe rapidamente e é absorvido pelo ambiente sem causar danos.",
+      "Verdadeora, mas apenas o plástico biodegradável afeta a cadeia alimentar, enquanto o plástico tradicional não tem impacto nas espécies marinhas.",
+      "Falsa, o plástico nos oceanos não afeta a vida marinha de forma significativa; é mais uma preocupação ambiental do que um problema para os animais."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "O desmatamento na Amazônia aumentou nas últimas décadas, mas não afetou o clima global. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falsa, o desmatamento na Amazônia em grande escala afeta o clima global ao reduzir essa capacidade e liberar gases de efeito estufa.",
+      "Verdadeiro. O desmatamento na Amazônia não tem impacto no clima global, pois o efeito é restrito apenas à região da floresta.",
+      "Falso. O desmatamento da Amazônia ajuda a controlar o clima global, pois a redução das árvores reduz a quantidade de gases de efeito estufa na atmosfera.",
+      "Falso. A Amazônia não afeta o clima global; o desmatamento lá tem impactos apenas na biodiversidade local."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Usar garrafas de plástico uma vez e descartá-las ajuda a proteger o meio ambiente. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falsa, o ideal é reutilizar e reciclar plásticos. O uso único e o descarte de garrafas plásticas descartáveis ​​são grandes responsáveis ​​pela poluição ambiental.",
+      "Falso. As garrafas de plástico descartáveis ajudam a manter o ambiente limpo, pois são recicladas automaticamente pelos oceanos e solos.",
+      "Verdadeiro. Usar garrafas de plástico descartáveis é uma boa maneira de proteger o meio ambiente, pois elas são leves e fáceis de reciclar.",
+      "Falso. Usar garrafas de plástico uma vez e descartá-las é uma prática sustentável, pois as garrafas se decompõem rapidamente e não afetam a natureza."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Todos os países do mundo têm responsabilidade em ajudar a reduzir as emissões de gases de efeito estufa para combater as mudanças climáticas. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Verdadeira, as mudanças climáticas afetam o mundo inteiro, e todos os países devem colaborar para reduzir as emissões.",
+      "Falso. Apenas os países desenvolvidos têm responsabilidade em reduzir as emissões de gases de efeito estufa, pois são os maiores poluidores históricos.",
+      "Falso. Os países em desenvolvimento não precisam se preocupar com a redução das emissões de gases de efeito estufa, pois sua prioridade é o crescimento econômico.",
+      "Verdadeiro, mas os países que estão localizados nas regiões mais afetadas pelas mudanças climáticas têm a responsabilidade de combater as emissões de gases de efeito estufa."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "A energia solar e a energia eólica são exemplos de fontes de energia renovável que não poluem o meio ambiente. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Verdadeira. Essas formas de energia são consideradas limpas porque não emitem gases poluentes e são renováveis, ao contrário dos combustíveis fósseis.",
+      "Verdadeira, mas a energia solar e a energia eólica produzem poluição significativa, principalmente durante a fabricação de seus equipamentos.",
+      "Falso. A energia solar e a energia eólica são fontes de energia renovável, mas emitem gases de efeito estufa durante sua operação.",
+      "Falso. A energia solar e a energia eólica, embora renováveis, são fontes que consomem muitos recursos naturais e causam danos ambientais."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "A reciclagem de lixo é uma prática importante, mas não tem impacto direto na preservação do meio ambiente. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falso. A reciclagem de lixo tem um impacto direto na preservação do meio ambiente, pois ajuda a reduzir a quantidade de resíduos em aterros e economiza recursos naturais.",
+      "Falso. A reciclagem é uma prática importante, mas só ajuda a diminuir a poluição do ar e não tem efeito sobre o solo ou os oceanos.",
+      "Falso. A reciclagem de lixo é útil apenas para gerar energia e não afeta significativamente o meio ambiente, já que os resíduos são incinerados.",
+      "Verdadeiro. A reciclagem de lixo é importante, mas não tem um impacto real na preservação ambiental, pois a maioria dos materiais reciclados ainda acaba sendo descartada de forma inadequada."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Algumas espécies de animais estão em risco de extinção por causa do comércio ilegal de suas peles, ossos e outras partes do corpo. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Verdadeira. O comércio ilegal de animais é uma das principais ameaças à biodiversidade, colocando diversas espécies em risco de extinção.",
+      "Falso. O comércio ilegal de animais não afeta a sobrevivência das espécies; pelo contrário, ele ajuda a controlar a população de animais selvagens.",
+      "Falso. Apenas o desmatamento é responsável pelo risco de extinção de algumas espécies, e o comércio ilegal de partes de animais não tem impacto significativo.",
+      "Falso. O comércio ilegal de partes de animais é benéfico para as espécies, pois ajuda a aumentar o valor econômico de sua preservação."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "A emissão de gases poluentes das fábricas e carros contribui para a destruição da camada de ozônio. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falso. A camada de ozônio é destruída principalmente por substâncias químicas como os CFCs, não diretamente pela poluição de fábricas e carros, que afetam mais o aquecimento global.",
+      "Verdadeiro. Gases poluentes de fábricas e carros, como dióxido de carbono e monóxido de carbono, são os principais responsáveis pela destruição da camada de ozônio.",
+      "Falso. A emissão de gases de fábricas e carros contribui apenas para o aquecimento global, não tendo impacto na camada de ozônio.",
+      "Falso. A camada de ozônio é destruída exclusivamente por radiação solar, e não pelos gases poluentes gerados por fábricas e carros."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Todas as pessoas que compartilham notícias falsas nas redes sociais fazem isso intencionalmente. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falso. Muitas pessoas compartilham notícias falsas nas redes sociais sem perceber que são falsas, geralmente por falta de verificação ou conhecimento.",
+      "Verdadeiro. Todas as pessoas que compartilham notícias falsas nas redes sociais fazem isso de forma intencional, com a intenção de enganar ou manipular os outros.",
+      "Falso. As pessoas que compartilham notícias falsas nas redes sociais fazem isso sem querer, mas elas geralmente sabem que estão compartilhando informações falsas.",
+      "Falso. As notícias falsas nunca são compartilhadas por pessoas comuns, apenas por robôs e sistemas automatizados."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "As notícias falsas podem influenciar os resultados das eleições. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Verdadeiro. Notícias falsas espalhadas durante campanhas eleitorais podem distorcer a percepção pública sobre candidatos e políticas, influenciando resultados.",
+      "Falso. As notícias falsas não afetam os resultados das eleições, pois as pessoas sempre verificam as informações antes de votar.",
+      "Falso. Apenas os candidatos podem influenciar os resultados das eleições, não as notícias, mesmo que sejam falsas.",
+      "Verdadeiro. Mas só afetam eleições em países com sistemas eleitorais fracos; em países desenvolvidos, isso não tem impacto."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Alguns sites usam títulos sensacionalistas para atrair mais cliques, mesmo que o conteúdo seja falso. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Verdadeiro. O chamado \"clickbait\" é uma prática comum em que os sites usam",
+      "Falso. Os sites sempre garantem que o conteúdo corresponde exatamente ao título, sem exageros ou sensacionalismo, para manter a confiança dos leitores.",
+      "Falso. Sites que usam títulos sensacionalistas são geralmente confiáveis e apresentam informações baseadas em fatos, mesmo que sejam exageradas para atrair cliques.",
+      "Verdadeiro, mas os sites usam títulos sensacionalistas apenas quando o conteúdo é verdadeiro e relevante, sem intenção de enganar o público."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "As grandes plataformas de redes sociais possuem sistemas automáticos que removem todas as notícias falsas. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Falso. Embora as redes sociais possuam sistemas para detectar e remover conteúdo falso, nem todo material enganoso é detectado ou removido imediatamente.",
+      "Falso. As redes sociais removem apenas as notícias falsas que causam grande impacto, deixando as menores passarem sem verificação.",
+      "Verdadeiro. As grandes plataformas de redes sociais possuem sistemas automáticos que garantem a remoção imediata de todas as notícias falsas assim que são detectadas.",
+      "Falso. As plataformas de redes sociais não possuem nenhum sistema para detectar ou remover notícias falsas."
+    ],
+    "correta": 0
+  },
+  {
+    "enunciado": "Fotos manipuladas digitalmente podem parecer reais e enganar pessoas online. Essa afirmação é verdadeira ou falsa?",  
+    "respostas": [
+      "Verdadeiro. Com ferramentas de edição de imagem, é possível manipular fotos de forma convincente, e isso pode ser usado para espalhar desinformação.",
+      "Falso. Fotos manipuladas nunca são convincentes e sempre podem ser identificadas como falsas, mesmo por quem não entende de edição de imagens.",
+      "Verdadeiro. Mas elas são seguras e confiáveis, e não importa o quanto sejam manipuladas; elas nunca enganariam as pessoas.",
+      "Falso. Fotos manipuladas digitalmente podem parecer falsas, mas não são capazes de enganar ninguém."
+    ],
+    "correta": 0
+  }
+
+
+    ];
+    let currentItems;
+    let correctCount = 0;
+    let wrongCount = 0;
+
+    function updateScore() {
+      document.getElementById('score').textContent = 
+        `${correctCount} acertos até agora, ${wrongCount} erros`;
+    }
+
+    function clearScore() {
+      correctCount = 0;
+      wrongCount = 0;
+      updateScore();
+    }
+
+    function loadQuestion() {
+      document.getElementById('feedback').textContent = '';
+      const q = questions[Math.floor(Math.random() * questions.length)];
+      document.getElementById('question').textContent = q.enunciado;
+
+      currentItems = q.respostas.map((txt, idx) => ({
+        text: txt,
+        correct: idx === q.correta
+      }));
+      shuffle(currentItems);
+
+      const opts = document.getElementById('options');
+      opts.innerHTML = '';
+      currentItems.forEach(item => {
+        const btn = document.createElement('button');
+        btn.textContent = item.text;
+        btn.onclick = () => checkAnswer(item.correct);
+        opts.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(isCorrect) {
+      const fb = document.getElementById('feedback');
+      if (isCorrect) {
+        correctCount++;
+        fb.style.color = 'green';
+        fb.textContent = 'Você acertou!';
+      } else {
+        wrongCount++;
+        fb.style.color = 'red';
+        const correctText = currentItems.find(it => it.correct).text;
+        fb.textContent = `Você errou! A resposta correta era: “${correctText}”`;
+      }
+      updateScore();
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    // inicia
+    loadQuestion();
+  </script>
+</body>
+</html>
