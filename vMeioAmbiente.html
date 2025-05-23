@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Fato ou Fake?</title>
+  <style>
+    :root {
+      --verde-escuro: #076A75;
+      --off-white: #F9FFFF;
+      --laranja: #F58442;
+      --verde-claro: #3CB3BD;
+      --preto: #000000;
+    }
+    body {
+      background: var(--off-white);
+      color: var(--preto);
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    .quiz-container {
+      border: 2px solid var(--verde-escuro);
+      border-radius: 8px;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 600px;
+      background: white;
+    }
+    img.logo {
+      max-width: 500px;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      color: var(--verde-escuro);
+      text-align: center;
+    }
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin: .4rem 0;
+      padding: .6rem;
+      background: var(--verde-claro);
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      text-align: left;
+    }
+    .options button:hover { background: var(--laranja); }
+    .feedback {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    .controls button {
+      padding: .6rem 1.2rem;
+      background: var(--verde-escuro);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .controls #score {
+      font-size: 1rem;
+      color: var(--preto);
+    }
+  </style>
+</head>
+<body>
+  <!-- logomarca da Rede Lide -->
+  <img src="Logo Lide (deve ficar na mesma pasta do jogo).png" alt="Rede Lide" class="logo">
+
+  <h1>Quiz Fato ou Fake?  - Especial: meio ambiente </h1>
+  <!-- LINKS DOS REALIZADORES -->
+ <h5>Realização: <a href="https://redelidecti.com.br/">Rede Lide em CT&I</a> / Apoio: <a href="https://www.targetmultimidia.com.br/">Target Multimídia</a></h5>
+
+  <div class="quiz-container">
+    <div id="question" class="question"></div>
+    <div class="options" id="options"></div>
+    <div id="feedback" class="feedback"></div>
+    <div class="controls">
+      <button id="nextBtn" onclick="loadQuestion()">Próxima</button>
+      <div id="score">0 acertos / 0 erros</div>
+      <button onclick="clearScore()">Limpar Pontuação</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+
+/* ... suas perguntas ... */ 
+{
+    enunciado: "A emissão de metano pelo gado bovino corresponde a cerca de 30% das emissões de metano mundiais?",
+    respostas: [
+      "Verdadeiro, a pecuária é grande emissora de metano.",
+      "Falso, é menos de 10%.",
+      "Falso, o metano vem só de aterros.",
+      "Verdadeiro, mas só em países em desenvolvimento."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "É importante não danificarmos a camada de ozônio, pois ela protege a Terra dos raios ultravioleta nocivos.",
+    respostas: [
+      "Verdadeiro, ela filtra a radiação UV.",
+      "Falso, é o dióxido de carbono que faz isso.",
+      "Falso, não há camada de ozônio.",
+      "Verdadeiro, mas ela não protege próximo a linha do equador."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "As ilhas de calor urbano ocorrem quando uma cidade retém mais calor que áreas rurais vizinhas?",
+    respostas: [
+      "Verdadeiro, concreto e asfalto armazenam calor.",
+      "Falso, áreas urbanas são mais frias.",
+      "Falso, depende da previsão meteorológica.",
+      "Verdadeiro, mas só em capitais."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "O descarte de óleo de cozinha na pia pode contaminar rios e lagos irreversivelmente?",
+    respostas: [
+      "Verdadeiro, o óleo pode entupir o sistema de esgoto e causar poluição ambiental.",
+      "Falso, óleo é solúvel em água.",
+      "Falso, óleo é biodegradável instantaneamente.",
+      "Verdadeiro, mas só se for em grandes quantidades."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "O plástico leva em média 500 anos para se decompor na natureza?",
+    respostas: [
+      "Verdadeiro, plásticos convencionais duram séculos.",
+      "Falso, se decompõem em meses.",
+      "Falso, todo plástico é biodegradável.",
+      "Verdadeiro, mas só em aterros controlados."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "A queima de combustíveis fósseis não afeta o pH dos oceanos?",
+    respostas: [
+      "Falso, aumenta a acidez marinha (acidificação).",
+      "Verdadeiro, o oceano tem capacidade de balanceamento infinito.",
+      "Falso, só afeta rios.",
+      "Verdadeiro, ph oceânico é sempre constante."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "As barreiras de corais são chamadas 'florestas submarinas' pela biodiversidade que abrigam?",
+    respostas: [
+      "Verdadeiro, corais sustentam muitas espécies.",
+      "Falso, corais não são organismos vivos.",
+      "Falso, o termo correto é desertos marinhos.",
+      "Verdadeiro, mas só no Pacífico."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "A energia eólica produz zero emissão direta de CO₂ durante a operação?",
+    respostas: [
+      "Verdadeiro, turbinas não emitem gases ao gerar eletricidade.",
+      "Falso, turbinas queimam combustível.",
+      "Falso, vento gera metano.",
+      "Verdadeiro, mas requer reposição de óleo diesel."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "Os biomas de planície costeira são mais vulneráveis ao aumento do nível do mar do que regiões montanhosas?",
+    respostas: [
+      "Verdadeiro, planícies baixas sofrem inundações.",
+      "Falso, planícies são mais altas que montanhas.",
+      "Falso, montanhas sofrem mais erosão.",
+      "Verdadeiro, mas só em ilhas-africanas."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "A pesca predatória pode levar extinção de espécies em poucas décadas?",
+    respostas: [
+      "Verdadeiro, retirada excessiva compromete populações.",
+      "Falso, o oceano repõe peixes naturalmente sempre.",
+      "Falso, não há evidências de extinção.",
+      "Verdadeiro, mas só em reservatórios."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "A chamada 'pegada ecológica' mede a quantidade de área produtiva necessária para sustentar consumo humano?",
+    respostas: [
+      "Verdadeiro, avalia uso de recursos por pessoa/nação.",
+      "Falso, mede apenas emissão de CO₂.",
+      "Falso, é métrica de desperdício de água.",
+      "Verdadeiro, mas só para animais domésticos."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "As hidrelétricas não produzem nenhum impacto ambiental significativo?",
+    respostas: [
+      "Falso, barragens inundam áreas e alteram ecossistemas.",
+      "Verdadeiro, são 100% limpas.",
+      "Falso, hidrelétricas geram metano apenas.",
+      "Verdadeiro, mas só as sediadas na Europa."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "O uso de agrotóxicos não impacta a saúde humana se aplicado corretamente?",
+    respostas: [
+      "Falso, resíduos podem contaminar alimentos e água.",
+      "Verdadeiro, não há risco comprovado.",
+      "Falso, agrotóxicos viram fertilizantes.",
+      "Verdadeiro, mas só em plantações orgânicas."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "A energia solar fotovoltaica converte diretamente luz em eletricidade sem emissão?",
+    respostas: [
+      "Verdadeiro, painéis não emitem gases na geração.",
+      "Falso, usam combustíveis fósseis.",
+      "Falso, emitem CFCs no processo.",
+      "Verdadeiro, mas só em usinas subterrâneas."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "A degradação de manguezais afeta a vida marinha e a proteção costeira?",
+    respostas: [
+      "Verdadeiro, manguezais são berçários e barreiras naturais.",
+      "Falso, manguezais não têm função ecológica.",
+      "Falso, protegem só florestas.",
+      "Verdadeiro, mas só em mares tropicais."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "O transporte público elétrico reduz emissões de poluentes comparado a ônibus a diesel?",
+    respostas: [
+      "Verdadeiro, elétricos não emitem no local de uso.",
+      "Falso, elétricos emitem mais CO₂.",
+      "Falso, não existe transporte elétrico.",
+      "Verdadeiro, mas só em Cingapura."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "O 'excesso de turismo' pode levar à degradação de áreas naturais?",
+    respostas: [
+      "Verdadeiro, excesso danifica estradas e habitats.",
+      "Falso, turismo só traz benefícios.",
+      "Falso, não há relação.",
+      "Verdadeiro, mas só em cachoeiras."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "A compostagem doméstica transforma resíduos orgânicos em adubo sem emissões nocivas?",
+    respostas: [
+      "Verdadeiro, devolve nutrientes ao solo e reduz lixo.",
+      "Falso, gera gás venenoso.",
+      "Falso, não é viável em casa.",
+      "Verdadeiro, mas só sem minhocas."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "A poluição luminosa interfere nos ciclos biológicos de aves e insetos?",
+    respostas: [
+      "Verdadeiro, interfere nas migrações e ciclo de vida.",
+      "Falso, não há efeito comprovado.",
+      "Falso, luzes não afetam seres.",
+      "Verdadeiro, mas só em mega-cidades."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "A meta de neutralidade de carbono até 2050 depende de redução e captura de CO₂?",
+    respostas: [
+      "Verdadeiro, envolve ambas estratégias.",
+      "Falso, só captura basta.",
+      "Falso, neutralidade de carbono é desnecessária.",
+      "Verdadeiro, mas só em países ricos."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "A agricultura regenerativa visa restaurar a saúde do solo e capturar carbono?",
+    respostas: [
+      "Verdadeiro, práticas conservacionistas ajudam nisso.",
+      "Falso, isso não importa no agronegócio.",
+      "Falso, só consome carbono.",
+      "Verdadeiro, mas só em fazendas pequenas."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "O transporte de carga por ferrovia emite menos CO₂ que por caminhão?",
+    respostas: [
+      "Verdadeiro, trilhos são mais eficientes.",
+      "Falso, trens emitem mais.",
+      "Falso, ambos emitem igual.",
+      "Verdadeiro, mas só em países frios."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "A biodiversidade de abelhas é essencial para a polinização de culturas alimentares?",
+    respostas: [
+      "Verdadeiro, sem elas há prejuízo na agricultura.",
+      "Falso, polinizadores não importam.",
+      "Falso, só vento poliniza.",
+      "Verdadeiro, mas só para flores silvestres."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "A restauração de áreas degradadas requer apenas ações de plantio?",
+    respostas: [
+      "Falso, exige manejo de solo, água e espécies nativas.",
+      "Verdadeiro, basta plantar mudas.",
+      "Falso, áreas degradadas são irreversíveis.",
+      "Verdadeiro, mas só em regiões tropicais."
+    ],
+    correta: 0
+  },
+  {
+    enunciado: "O lixo eletrônico contém substâncias químicas como 'metais pesados' que contaminam o solo se descartado incorretamente?",
+    respostas: [
+      "Verdadeiro, deve ser reciclado em pontos específicos.",
+      "Falso, não há metal perigoso.",
+      "Falso, e-lixo é inofensivo.",
+      "Verdadeiro, mas só em baterias."
+    ],
+    correta: 0
+  },
+  {
+        enunciado: "O aquecimento global é um mito criado por ambientalistas. Essa afirmação é verdadeira ou falsa?",
+        respostas: [
+          "Mentira, é uma preocupação cientificamente comprovada.",
+          "Verdade, foi criado para confundir a população.",
+          "Mentira, é um mito criado por jornalistas.",
+          "Verdade, não há evidências que comprovem."
+        ],
+        correta: 0
+      },
+      {
+        enunciado: "O desmatamento na Amazônia é um grande problema, mas é irreversível e a floresta não pode ser recuperada.",
+        respostas: [
+          "Falso, há técnicas e esforços possíveis para reflorestar.",
+          "Falso, a floresta pode ser recuperada e queimada ao mesmo tempo.",
+          "Verdade, por isso não adianta mais fazer nada.",
+          "Verdade, não há o que fazer com o desmatamento."
+        ],
+        correta: 0
+      },
+      {
+        enunciado: "Os incêndios no Pantanal são naturais e fazem parte da dinâmica do bioma.",
+        respostas: [
+          "Falso, os incêndios recentes foram provocados por atividades humanas.",
+          "Falso, não tivemos incêndios no Pantanal nos últimos anos.",
+          "Verdade, eles têm relação com a dinâmica do bioma.",
+          "Verdade, e por isso não precisa de ninguém para apagar."
+        ],
+        correta: 0
+      },
+      {
+        enunciado: "Por que a Amazônia é importante para o mundo?",
+        respostas: [
+          "Porque é a maior floresta do mundo e ajuda a regular o clima.",
+          "Porque produz a maior parte da comida do planeta.",
+          "Porque serve como fonte de mineração.",
+          "Porque é o habitat de animais em extinção."
+        ],
+        correta: 0
+      },
+      {
+        enunciado: "O que é energia renovável?",
+        respostas: [
+          "Energia que não se esgota e vem de fontes naturais como sol e vento.",
+          "Energia gerada a partir de carvão.",
+          "Energia nuclear.",
+          "Energia gerada a partir de petróleo."
+        ],
+        correta: 0
+      }
+];
+    let currentItems;
+    let correctCount = 0;
+    let wrongCount = 0;
+
+    function updateScore() {
+      document.getElementById('score').textContent = 
+        `${correctCount} acertos até agora, ${wrongCount} erros`;
+    }
+
+    function clearScore() {
+      correctCount = 0;
+      wrongCount = 0;
+      updateScore();
+    }
+
+    function loadQuestion() {
+      document.getElementById('feedback').textContent = '';
+      const q = questions[Math.floor(Math.random() * questions.length)];
+      document.getElementById('question').textContent = q.enunciado;
+
+      currentItems = q.respostas.map((txt, idx) => ({
+        text: txt,
+        correct: idx === q.correta
+      }));
+      shuffle(currentItems);
+
+      const opts = document.getElementById('options');
+      opts.innerHTML = '';
+      currentItems.forEach(item => {
+        const btn = document.createElement('button');
+        btn.textContent = item.text;
+        btn.onclick = () => checkAnswer(item.correct);
+        opts.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(isCorrect) {
+      const fb = document.getElementById('feedback');
+      if (isCorrect) {
+        correctCount++;
+        fb.style.color = 'green';
+        fb.textContent = 'Você acertou!';
+      } else {
+        wrongCount++;
+        fb.style.color = 'red';
+        const correctText = currentItems.find(it => it.correct).text;
+        fb.textContent = `Você errou! A resposta correta era: “${correctText}”`;
+      }
+      updateScore();
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    // inicia
+    loadQuestion();
+  </script>
+</body>
+</html>
